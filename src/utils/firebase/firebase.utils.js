@@ -1,10 +1,11 @@
 // https://firebase.google.com/docs/web/setup#available-libraries
 import { initializeApp } from "firebase/app";
+
 import {
   getAuth,
-  signInWithRedirect,
   signInWithPopup,
-  GoogleAuthProvider
+  GoogleAuthProvider,
+  createUserWithEmailAndPassword
 } from 'firebase/auth'
 
 import {
@@ -37,14 +38,13 @@ export const signInWithGooglePopup = () => signInWithPopup(auth, provider);
 
 export const db = getFirestore()
 
-export const createUserDocumentFromAuth = async (userAuth) => {
-  const userDocRef = doc(db, 'users', userAuth.uid);
-  console.log('userDocRef', userDocRef);
-  const userSnapshot = await getDoc(userDocRef);
-  console.log('userSnapshot', userSnapshot);
-  console.log('userSnapshot exists?', userSnapshot.exists());
+export const createUserDocumentFromAuth = async (userAuth, additionalInformation = {}) => {
+  if (!userAuth) return;
 
-  const {displayName, email} = userAuth;
+  const userDocRef = doc(db, 'users', userAuth.uid);
+  const userSnapshot = await getDoc(userDocRef);
+
+  const { displayName, email } = userAuth;
   const createdAt = new Date();
   const lastLoginAt = new Date();
 
@@ -54,20 +54,18 @@ export const createUserDocumentFromAuth = async (userAuth) => {
         displayName,
         email,
         createdAt,
-        lastLoginAt
+        lastLoginAt,
+        ...additionalInformation
       })
     } catch (e) {
-      console.log('error creating ther user', e.message)
-    }
-  } else {
-    try {
-      await setDoc(userDocRef, {
-        lastLoginAt
-      })
-    } catch (e) {
-      console.log('error updating the user', e.message)
+      console.log('error creating user', e.message)
     }
   }
 
   return userDocRef;
+}
+
+export const createAuthUserWithEmailAndPassword = async (displayName, email, password) => {
+  if (!email || !password) return;
+  return createUserWithEmailAndPassword(auth, email, password)
 }
