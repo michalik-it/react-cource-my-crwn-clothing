@@ -2,7 +2,7 @@ import Button from "../button/button.component";
 import { signInWithEmailPassword, signInWithGooglePopup } from "../../utils/firebase/firebase.utils";
 import FormInput from "../form-input/form-input.component";
 import { useState } from "react";
-import './sign-up-form.styles.scss'
+import './sign-in-form.styles.scss'
 
 const defaultSignInFormFields = {
   email: '',
@@ -19,7 +19,20 @@ const SignInForm = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    await logViaEmailPassword(email, password);
+    return logViaEmailPassword(email, password);
+  }
+
+  const logViaGooglePopup = async () => {
+    return signInWithGooglePopup();
+  }
+
+  const logViaEmailPassword = async (email, password) => {
+    await signInWithEmailPassword(email, password);
+    resetFormFields();
+  };
+
+  const resetFormFields = () => {
+    setFormFields(defaultSignInFormFields);
   }
 
   return (
@@ -29,7 +42,7 @@ const SignInForm = () => {
       <form onSubmit={handleSubmit}>
         <FormInput type='text' required
                    label='Email'
-                   autofocus="true"
+                   autoFocus={true}
                    onChange={handleChange}
                    name='email'
                    value={email}/>
@@ -51,14 +64,5 @@ const SignInForm = () => {
   )
 }
 
-const logViaGooglePopup = async () => {
-  const signInResponse = await signInWithGooglePopup();
-  console.log('Google sign in response:', signInResponse);
-}
-
-const logViaEmailPassword = async (email, password) => {
-  const signInResponse = await signInWithEmailPassword(email, password);
-  console.log('Google sign in response:', signInResponse)
-};
 
 export default SignInForm;
