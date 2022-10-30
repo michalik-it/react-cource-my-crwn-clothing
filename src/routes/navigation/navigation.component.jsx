@@ -5,9 +5,16 @@ import { UserContext } from "../../contexts/user.context";
 
 import './navigation.styles.scss'
 import { signOutUser } from "../../utils/firebase/firebase.utils";
+import CardIcon from "../../components/cart-icon/cart-icon.component";
+import CartDropdown from "../../components/cart-dropdown/cart-dropdown.component";
+import { CartContext } from "../../contexts/cart.context";
 
 const Navigation = () => {
   const { currentUser } = useContext(UserContext)
+  const { open, setOpen } = useContext(CartContext)
+  const toggleOpen = async () => {
+    setOpen(!open);
+  };
   return (
     <Fragment>
       <div className="navigation">
@@ -27,8 +34,11 @@ const Navigation = () => {
               </Link>
             )
           }
-
+          <CardIcon type="button" onClick={toggleOpen}/>
         </div>
+        {
+          open && <CartDropdown />
+        }
       </div>
       <Outlet/>
     </Fragment>
