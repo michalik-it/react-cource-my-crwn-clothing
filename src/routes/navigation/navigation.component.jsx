@@ -11,10 +11,7 @@ import { CartContext } from "../../contexts/cart.context";
 
 const Navigation = () => {
   const { currentUser } = useContext(UserContext)
-  const { open, setOpen } = useContext(CartContext)
-  const toggleOpen = async () => {
-    setOpen(!open);
-  };
+  const { isCartOpen } = useContext(CartContext)
   return (
     <Fragment>
       <div className="navigation">
@@ -34,10 +31,10 @@ const Navigation = () => {
               </Link>
             )
           }
-          <CardIcon type="button" onClick={toggleOpen}/>
+          <CardIcon/>
         </div>
         {
-          open && <CartDropdown />
+          isCartOpen && <CartDropdown />
         }
       </div>
       <Outlet/>
