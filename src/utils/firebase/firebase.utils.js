@@ -15,7 +15,11 @@ import {
   getFirestore,
   doc,
   getDoc,
-  setDoc
+  getDocs,
+  setDoc,
+  collection,
+  writeBatch,
+  query
 } from "firebase/firestore";
 
 // Your web app's Firebase configuration
@@ -57,6 +61,30 @@ export const signOutUser = async () => signOut(auth)
 export const onAuthStateChangedListener = (callback) => onAuthStateChanged(auth, callback)
 
 export const db = getFirestore()
+
+/* One time load data */
+/*export const addCollectionAndDocuments = async (collectionKey, objectsToAdd) => {
+  const collectionRef = collection(db, collectionKey);
+  const batch = writeBatch(db);
+  objectsToAdd.forEach(object => {
+    // batch.set(object)
+    const docRef = doc(collectionRef, object.title.toLowerCase());
+    batch.set(docRef, object);
+  })
+  await batch.commit();
+}*/
+
+export const getCategoriesAndDocuments = async () => {
+  const collectionRef = collection(db, 'categories');
+  const q = query(collectionRef);
+  const querySnapshots = await getDocs(q);
+  const categoryMapWithTitleAsKey = querySnapshots.docs.reduce((acc, docSnapshot) => {
+    const {title, items} = docSnapshot.data();
+    acc[title.toLowerCase()] = items;
+    return acc;
+  }, {});
+  return categoryMapWithTitleAsKey;
+}
 
 export const createAuthUserWithEmailAndPassword = async (displayName, email, password) => {
   if (!email || !password) return;

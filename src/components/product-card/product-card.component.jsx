@@ -4,10 +4,10 @@ import { useContext } from "react";
 import { CartContext } from "../../contexts/cart.context";
 
 const ProductCard = ({ product }) => {
-  const { addItemToCard } = useContext(CartContext);
+  const { addProductToCart } = useContext(CartContext);
   const { name, price, imageUrl } = product;
   const addToCart = async () => {
-    addItemToCard(product);
+    addProductToCart(product);
   };
   return (
     <div className="product-card-container">
