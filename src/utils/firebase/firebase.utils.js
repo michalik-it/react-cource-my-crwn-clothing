@@ -2,25 +2,16 @@
 import { initializeApp } from "firebase/app";
 
 import {
+  createUserWithEmailAndPassword,
   getAuth,
-  signInWithPopup,
-  signInWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged,
   GoogleAuthProvider,
-  createUserWithEmailAndPassword
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut
 } from 'firebase/auth'
 
-import {
-  getFirestore,
-  doc,
-  getDoc,
-  getDocs,
-  setDoc,
-  collection,
-  writeBatch,
-  query
-} from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, getFirestore, query, setDoc } from "firebase/firestore";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
